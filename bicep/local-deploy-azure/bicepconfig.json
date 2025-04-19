@@ -1,0 +1,12 @@
+{
+  "experimentalFeaturesEnabled": {
+    "extensibility": true,
+    "localDeploy": true
+  },
+  "cloud": {
+    "credentialPrecedence": [
+      "AzureCLI"
+    ],
+    "currentProfile": "AzureCloud"
+  }
+}
