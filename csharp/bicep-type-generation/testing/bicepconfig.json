@@ -1,0 +1,10 @@
+{
+  "experimentalFeaturesEnabled": {
+    "extensibility": true,
+    "localDeploy": true
+  },
+  "extensions": {
+    "testext": "./testext.tgz"
+  },
+  "implicitExtensions": []
+}

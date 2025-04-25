@@ -1,0 +1,61 @@
+[
+  {
+    "$type": "IntegerType",
+    "minValue": null,
+    "maxValue": null
+  },
+  {
+    "$type": "StringType",
+    "sensitive": null,
+    "minLength": null,
+    "maxLength": null,
+    "pattern": null
+  },
+  {
+    "$type": "StringType",
+    "sensitive": null,
+    "minLength": null,
+    "maxLength": null,
+    "pattern": null
+  },
+  {
+    "$type": "ObjectType",
+    "name": "Process",
+    "properties": {
+      "pid": {
+        "type": {
+          "$ref": "#/0"
+        },
+        "flags": 0,
+        "description": null
+      },
+      "name": {
+        "type": {
+          "$ref": "#/1"
+        },
+        "flags": 0,
+        "description": null
+      },
+      "cmdline": {
+        "type": {
+          "$ref": "#/2"
+        },
+        "flags": 0,
+        "description": null
+      }
+    },
+    "additionalProperties": null,
+    "sensitive": null
+  },
+  {
+    "$type": "ResourceType",
+    "name": "Microsoft/Process@0.1.0",
+    "scopeType": 0,
+    "readOnlyScopes": null,
+    "body": {
+      "$ref": "#/3"
+    },
+    "flags": 0,
+    "functions": null
+  }
+]

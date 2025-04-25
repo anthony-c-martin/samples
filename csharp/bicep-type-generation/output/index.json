@@ -1,0 +1,15 @@
+{
+  "resources": {
+    "Microsoft/Process@0.1.0": {
+      "$ref": "types.json#/4"
+    }
+  },
+  "resourceFunctions": {},
+  "settings": {
+    "name": "KeyVault",
+    "version": "0.0.1",
+    "isSingleton": false,
+    "configurationType": null
+  },
+  "fallbackResourceType": null
+}
