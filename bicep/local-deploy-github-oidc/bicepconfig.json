@@ -10,8 +10,8 @@
     "currentProfile": "AzureCloud"
   },
   "extensions": {
-    "local": "br:bicepextdemo.azurecr.io/extensions/local:0.1.1",
-    "github": "br:bicepextdemo.azurecr.io/extensions/github:0.1.4",
+    "local": "br:bicepextdemo.azurecr.io/extensions/local:0.1.4",
+    "github": "br:bicepextdemo.azurecr.io/extensions/github:0.1.6",
     "msGraph": "br:mcr.microsoft.com/bicep/extensions/microsoftgraph/v1.0:0.1.8-preview"
   },
   "implicitExtensions": []

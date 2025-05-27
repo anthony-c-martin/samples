@@ -26,6 +26,10 @@ resource githubApp 'Microsoft.Graph/applications@v1.0' = {
   }
 }
 
+resource githubSp 'Microsoft.Graph/servicePrincipals@v1.0' = {
+  appId: githubApp.appId
+}
+
 resource ownerRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   scope: tenant()
   name: '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
@@ -39,8 +43,9 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 resource ownerRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(githubRepo.name, ownerRoleDefinition.id, resourceGroup.id)
   properties: {
-    principalId: githubApp.id
+    principalId: githubSp.id
     roleDefinitionId: ownerRoleDefinition.id
+    principalType: 'ServicePrincipal'
   }
 }
 
@@ -51,5 +56,5 @@ output secrets {
 } = {
   tenantId: subscription().tenantId
   subscriptionId: subscription().subscriptionId
-  clientId: githubApp.id
+  clientId: githubApp.appId
 }

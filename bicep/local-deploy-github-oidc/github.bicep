@@ -1,7 +1,7 @@
 targetScope = 'local'
 
 extension github with {
-  token: 'adf'
+  token: githubRepo.token
 }
 
 param githubRepo {
