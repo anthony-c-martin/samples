@@ -7,6 +7,6 @@ param acrResourceGroup = {
 }
 
 param githubRepo = {
-  name: 'anthony-c-martin'
-  owner: 'test-repo'
+  owner: 'anthony-c-martin'
+  name: 'bicep-local-deploy-test'
 }

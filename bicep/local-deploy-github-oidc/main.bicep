@@ -16,12 +16,7 @@ param acrResourceGroup {
 
 resource getAuthToken 'Script' = {
   type: 'bash'
-  script: '''
-#!/bin/bash
-set -e
-
-gh auth token
-'''
+  script: 'gh auth token'
 }
 
 module azure 'azure.bicep' = {
@@ -36,7 +31,7 @@ module ghSecrets 'github.bicep' = {
   params: {
     githubRepo: {
       ...githubRepo
-      token: getAuthToken.stdout
+      token: trim(getAuthToken.stdout)
     }
     secrets: azure.outputs.secrets
   }

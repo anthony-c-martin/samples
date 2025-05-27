@@ -18,23 +18,32 @@ param secrets {
   clientId: string
 }
 
-resource tenantId 'ActionsSecret' = {
+resource repo 'Repository' = {
   owner: githubRepo.owner
-  repo: githubRepo.name
+  name: githubRepo.name
+  visibility: 'Public'
+}
+
+resource tenantId 'ActionsSecret' = {
+  owner: repo.owner
+  repo: repo.name
   name: 'AZURE_TENANT_ID'
+  #disable-next-line use-secure-value-for-secure-inputs
   value: secrets.tenantId
 }
 
 resource subscriptionId 'ActionsSecret' = {
-  owner: githubRepo.owner
-  repo: githubRepo.name
+  owner: repo.owner
+  repo: repo.name
   name: 'AZURE_SUBSCRIPTION_ID'
+  #disable-next-line use-secure-value-for-secure-inputs
   value: secrets.subscriptionId
 }
 
 resource clientId 'ActionsSecret' = {
-  owner: githubRepo.owner
-  repo: githubRepo.name
+  owner: repo.owner
+  repo: repo.name
   name: 'AZURE_CLIENT_ID'
+  #disable-next-line use-secure-value-for-secure-inputs
   value: secrets.clientId
 }
