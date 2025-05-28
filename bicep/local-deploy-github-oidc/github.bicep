@@ -1,27 +1,21 @@
 targetScope = 'local'
 
-extension github with {
-  token: githubRepo.token
-}
+import { GitHubRepoConfig, AzureOidcConfig } from './types.bicep'
 
-param githubRepo {
-  owner: string
-  name: string
-  @secure()
-  token: string
+extension github with {
+  token: gitHubToken
 }
 
 @secure()
-param secrets {
-  tenantId: string
-  subscriptionId: string
-  clientId: string
-}
+param gitHubToken string
+param gitHubRepo GitHubRepoConfig
+param azureOidcConfig AzureOidcConfig
 
 resource repo 'Repository' = {
-  owner: githubRepo.owner
-  name: githubRepo.name
+  owner: gitHubRepo.owner
+  name: gitHubRepo.name
   visibility: 'Public'
+  description: 'Demo repo created with https://github.com/anthony-c-martin/samples/blob/main/bicep/local-deploy-github-oidc/main.bicepparam'
 }
 
 resource tenantId 'ActionsSecret' = {
@@ -29,7 +23,7 @@ resource tenantId 'ActionsSecret' = {
   repo: repo.name
   name: 'AZURE_TENANT_ID'
   #disable-next-line use-secure-value-for-secure-inputs
-  value: secrets.tenantId
+  value: azureOidcConfig.tenantId
 }
 
 resource subscriptionId 'ActionsSecret' = {
@@ -37,7 +31,7 @@ resource subscriptionId 'ActionsSecret' = {
   repo: repo.name
   name: 'AZURE_SUBSCRIPTION_ID'
   #disable-next-line use-secure-value-for-secure-inputs
-  value: secrets.subscriptionId
+  value: azureOidcConfig.subscriptionId
 }
 
 resource clientId 'ActionsSecret' = {
@@ -45,5 +39,14 @@ resource clientId 'ActionsSecret' = {
   repo: repo.name
   name: 'AZURE_CLIENT_ID'
   #disable-next-line use-secure-value-for-secure-inputs
-  value: secrets.clientId
+  value: azureOidcConfig.clientId
 }
+
+resource collaborators 'Collaborator' = [
+  for user in gitHubRepo.collaborators: {
+    owner: repo.owner
+    repo: repo.name
+    user: user
+    permission: 'write'
+  }
+]

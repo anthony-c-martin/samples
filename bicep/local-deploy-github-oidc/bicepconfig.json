@@ -1,6 +1,5 @@
 {
   "experimentalFeaturesEnabled": {
-    "extensibility": true,
     "localDeploy": true
   },
   "cloud": {
@@ -11,7 +10,7 @@
   },
   "extensions": {
     "local": "br:bicepextdemo.azurecr.io/extensions/local:0.1.4",
-    "github": "br:bicepextdemo.azurecr.io/extensions/github:0.1.6",
+    "github": "br:bicepextdemo.azurecr.io/extensions/github:0.1.7",
     "msGraph": "br:mcr.microsoft.com/bicep/extensions/microsoftgraph/v1.0:0.1.8-preview"
   },
   "implicitExtensions": []

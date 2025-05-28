@@ -1,12 +1,11 @@
 targetScope = 'local'
 
+import { GitHubRepoConfig } from './types.bicep'
+
 extension az
 extension local
 
-param githubRepo {
-  owner: string
-  name: string
-}
+param gitHubRepo GitHubRepoConfig
 
 param acrResourceGroup {
   subscriptionId: string
@@ -22,17 +21,15 @@ resource getAuthToken 'Script' = {
 module azure 'azure.bicep' = {
   scope: subscription(acrResourceGroup.subscriptionId)
   params: {
-    githubRepo: githubRepo
+    gitHubRepo: gitHubRepo
     acrResourceGroup: acrResourceGroup
   }
 }
 
 module ghSecrets 'github.bicep' = {
   params: {
-    githubRepo: {
-      ...githubRepo
-      token: trim(getAuthToken.stdout)
-    }
-    secrets: azure.outputs.secrets
+    gitHubToken: trim(getAuthToken.stdout)
+    gitHubRepo: gitHubRepo
+    azureOidcConfig: azure.outputs.oidcConfig
   }
 }
