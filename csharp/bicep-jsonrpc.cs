@@ -6,12 +6,7 @@
 using Bicep.RpcClient;
 
 var clientFactory = new BicepClientFactory(new HttpClient());
-
-using var client = await clientFactory.DownloadAndInitialize(
-    new BicepClientConfiguration
-    {
-        BicepVersion = "0.38.33",
-    }, default);
+using var client = await clientFactory.DownloadAndInitialize(new() { BicepVersion = "0.38.33" }, default);
 
 var version = await client.GetVersion();
 Console.WriteLine($"Bicep version: {version}");
