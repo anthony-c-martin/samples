@@ -1,11 +1,9 @@
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
+#!/usr/bin/env dotnet
+
+#:package CommandLineParser@2.9.1
+
 using System.Diagnostics;
 using CommandLine;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace Sample;
 
