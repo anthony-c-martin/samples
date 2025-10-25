@@ -1,40 +1,35 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+#!/usr/bin/env dotnet
+
+#:package Azure.Bicep.Core@0.38.33
+#:property JsonSerializerIsReflectionEnabledByDefault=true
+#:property PublishAot=false
+
 using System.IO.Abstractions;
+using System.Text;
 using Bicep.Core;
 using Bicep.Core.Analyzers.Interfaces;
 using Bicep.Core.Analyzers.Linter;
+using Bicep.Core.AzureApi;
 using Bicep.Core.Configuration;
 using Bicep.Core.Emit;
+using Bicep.Core.Extensions;
 using Bicep.Core.Features;
-using Bicep.Core.FileSystem;
 using Bicep.Core.Parsing;
 using Bicep.Core.Registry;
-using Bicep.Core.Syntax;
-using Bicep.Core.Text;
-using Bicep.Core.Registry.Auth;
+using Bicep.Core.Registry.Catalog.Implementation;
 using Bicep.Core.Semantics;
 using Bicep.Core.Semantics.Namespaces;
+using Bicep.Core.SourceGraph;
+using Bicep.Core.Syntax;
+using Bicep.Core.Text;
 using Bicep.Core.TypeSystem.Providers;
 using Bicep.Core.Utils;
 using Bicep.IO.Abstraction;
 using Bicep.IO.InMemory;
 using Microsoft.Extensions.DependencyInjection;
-using Environment = Bicep.Core.Utils.Environment;
-using Bicep.Core.SourceGraph;
-using Bicep.Core.Extensions;
-using Bicep.Core.Registry.Catalog.Implementation;
 
-public class Program
-{
-    public static async Task Main()
-    {
-        var fileExplorer = new InMemoryFileExplorer();
-        fileExplorer.GetFile(IOUri.FromLocalFilePath("/main.bicep")).Write("""
+var fileExplorer = new InMemoryFileExplorer();
+fileExplorer.GetFile(IOUri.FromFilePath("/main.bicep")).Write("""
 module mod 'module.bicep' = {
   name: 'module'
   params: {
@@ -42,50 +37,24 @@ module mod 'module.bicep' = {
   }
 }
 """);
-        fileExplorer.GetFile(IOUri.FromLocalFilePath("/module.bicep")).Write("""
+fileExplorer.GetFile(IOUri.FromFilePath("/module.bicep")).Write("""
 param foo string
 output foo string = foo
 """);
 
-        var services = new ServiceCollection()
-            .AddBicepCore(fileExplorer)
-            .BuildServiceProvider();
+var services = new ServiceCollection()
+    .AddBicepCore(fileExplorer)
+    .BuildServiceProvider();
 
-        var compiler = services.GetRequiredService<BicepCompiler>();
-        var compilation = await compiler.CreateCompilation(new Uri("file:///main.bicep"));
+var compiler = services.GetRequiredService<BicepCompiler>();
+var compilation = await compiler.CreateCompilation(IOUri.FromFilePath("/main.bicep"));
 
-        foreach (var model in compilation.GetAllModels().OfType<SemanticModel>())
-        {
-            Console.WriteLine(model.SourceFile.Uri);
-            var syntaxTree = model.SourceFile.ProgramSyntax;
-            SyntaxWriter.WriteSyntax(syntaxTree, Console.Out);
-            Console.WriteLine("");
-        }
-    }
-}
-
-public static class ServiceCollectionExtensions
+foreach (var model in compilation.GetAllModels().OfType<SemanticModel>())
 {
-    public static IServiceCollection AddBicepCore(this IServiceCollection services, IFileExplorer fileExplorer) => services
-        .AddSingleton<INamespaceProvider, NamespaceProvider>()
-        .AddSingleton<IResourceTypeProviderFactory, ResourceTypeProviderFactory>()
-        .AddSingleton<IContainerRegistryClientFactory, ContainerRegistryClientFactory>()
-        .AddSingleton<ITemplateSpecRepositoryFactory, TemplateSpecRepositoryFactory>()
-        .AddSingleton<IModuleDispatcher, ModuleDispatcher>()
-        .AddSingleton<IArtifactRegistryProvider, DefaultArtifactRegistryProvider>()
-        .AddSingleton<ITokenCredentialFactory, TokenCredentialFactory>()
-        .AddSingleton<IFileResolver, FileResolver>()
-        .AddSingleton<IEnvironment, Environment>()
-        .AddSingleton<IFileSystem, FileSystem>()
-        .AddSingleton<IFileExplorer>(fileExplorer)
-        .AddSingleton<IAuxiliaryFileCache, AuxiliaryFileCache>()
-        .AddSingleton<IConfigurationManager, ConfigurationManager>()
-        .AddSingleton<IBicepAnalyzer, LinterAnalyzer>()
-        .AddSingleton<IFeatureProviderFactory, FeatureProviderFactory>()
-        .AddSingleton<ILinterRulesProvider, LinterRulesProvider>()
-        .AddSingleton<ISourceFileFactory, SourceFileFactory>()
-        .AddRegistryCatalogServices()
-        .AddSingleton<BicepCompiler>();
+    Console.WriteLine(model.SourceFile.Uri);
+    var syntaxTree = model.SourceFile.ProgramSyntax;
+    SyntaxWriter.WriteSyntax(syntaxTree, Console.Out);
+    Console.WriteLine("");
 }
 
 public static class SyntaxWriter
@@ -185,4 +154,28 @@ public class SyntaxCollectorVisitor : CstVisitor
         depth--;
         parent = prevParent;
     }
+}
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddBicepCore(this IServiceCollection services, IFileExplorer fileExplorer) => services
+        .AddSingleton<INamespaceProvider, NamespaceProvider>()
+        .AddSingleton<IResourceTypeProviderFactory, ResourceTypeProviderFactory>()
+        .AddSingleton<IContainerRegistryClientFactory, ContainerRegistryClientFactory>()
+        .AddSingleton<ITemplateSpecRepositoryFactory, TemplateSpecRepositoryFactory>()
+        .AddSingleton<IArmClientProvider, ArmClientProvider>()
+        .AddSingleton<IModuleDispatcher, ModuleDispatcher>()
+        .AddSingleton<IArtifactRegistryProvider, DefaultArtifactRegistryProvider>()
+        .AddSingleton<ITokenCredentialFactory, TokenCredentialFactory>()
+        .AddSingleton<IEnvironment, Bicep.Core.Utils.Environment>()
+        .AddSingleton<IFileSystem, FileSystem>()
+        .AddSingleton<IFileExplorer>(fileExplorer)
+        .AddSingleton<IAuxiliaryFileCache, AuxiliaryFileCache>()
+        .AddSingleton<IConfigurationManager, ConfigurationManager>()
+        .AddSingleton<IBicepAnalyzer, LinterAnalyzer>()
+        .AddSingleton<IFeatureProviderFactory, FeatureProviderFactory>()
+        .AddSingleton<ILinterRulesProvider, LinterRulesProvider>()
+        .AddSingleton<ISourceFileFactory, SourceFileFactory>()
+        .AddRegistryCatalogServices()
+        .AddSingleton<BicepCompiler>();
 }

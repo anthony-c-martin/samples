@@ -1,36 +1,26 @@
 #!/usr/bin/env dotnet
 
-using System.Diagnostics;
+#:package Azure.Bicep.RpcClient@0.38.33
+#:property JsonSerializerIsReflectionEnabledByDefault=true
 
-var request = """
-{
-  "jsonrpc": "2.0",
-  "id": 0,
-  "method": "bicep/version",
-  "params": {}
-}
-""";
+using Bicep.RpcClient;
 
-using var process = new Process
-{
-    StartInfo = new ProcessStartInfo
+var clientFactory = new BicepClientFactory(new HttpClient());
+
+using var client = await clientFactory.DownloadAndInitialize(
+    new BicepClientConfiguration
     {
-        FileName = "bicep",
-        Arguments = "jsonrpc",
-        RedirectStandardInput = true,
-        RedirectStandardOutput = true,
-        RedirectStandardError = false,
-        UseShellExecute = false,
-        CreateNoWindow = true
-    },
-};
+        BicepVersion = "0.38.33",
+    }, default);
 
-process.Start();
+var version = await client.GetVersion();
+Console.WriteLine($"Bicep version: {version}");
 
-var rawRequest = $"Content-Length: {System.Text.Encoding.UTF8.GetByteCount(request)}\r\n\r\n{request}\r\n\r\n";
+var tempFile = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.bicep");
+File.WriteAllText(tempFile, """
+param foo string
+output foo string = foo
+""");
 
-await process.StandardInput.WriteAsync(rawRequest);
-var rawResponse = await process.StandardOutput.ReadToEndAsync();
-
-Console.WriteLine($"SENT: {rawRequest}");
-Console.WriteLine($"RCVD: {rawResponse}");
+var result = await client.Compile(new(tempFile));
+Console.Write(result.Contents);

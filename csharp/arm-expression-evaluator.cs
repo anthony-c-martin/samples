@@ -32,18 +32,18 @@ public class ReverseFunction : UnaryExpressionFunction<StringExpression>
         StringExpression arg,
         IPositionalMetadataHolder positionalMetadata)
     {
-		var charArray = arg.Value.ToCharArray();
-		Array.Reverse(charArray);
-		return new string(charArray).AsExpression();
+        var charArray = arg.Value.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray).AsExpression();
     }
 }
 
 public class CustomEvaluator : IExpressionEvaluationScope
 {
     private readonly static OrdinalInsensitiveDictionary<ExpressionFunction> AdditionalFunctions = new ExpressionFunction[] {
-		new ReverseFunction(),
-	}.ToOrdinalInsensitiveDictionary(x => x.Name);
+        new ReverseFunction(),
+    }.ToOrdinalInsensitiveDictionary(x => x.Name);
 
     public FunctionEvaluator? TryGetFunctionEvaluator(string functionName)
-		=> AdditionalFunctions.TryGetValue(functionName, out var expressionFunction) ? expressionFunction.Evaluate : null;
+        => AdditionalFunctions.TryGetValue(functionName, out var expressionFunction) ? expressionFunction.Evaluate : null;
 }
