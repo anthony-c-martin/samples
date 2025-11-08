@@ -1,6 +1,6 @@
 #!/usr/bin/env dotnet
 
-#:package Azure.Deployments.Expression@1.473.0
+#:package Azure.Deployments.Expression@1.527.0
 
 using Azure.Deployments.Expression.Expressions;
 using Azure.Deployments.Expression.Functions;
@@ -19,7 +19,7 @@ var evaluator = new ExpressionEvaluationContext([
 ]);
 
 var evaluated = evaluator.EvaluateExpression(ExpressionParser.ParseLanguageExpression(expression));
-var stringValue = (evaluated as StringExpression)!.Value;
+var stringValue = JTokenConverter.SerializeExpressionForErrorMessage(evaluated);
 
 Console.WriteLine($"Result: {stringValue}");
 
