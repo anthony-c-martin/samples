@@ -1,12 +1,12 @@
 #!/usr/bin/env dotnet
 
-#:package Azure.Bicep.RpcClient@0.38.33
+#:package Azure.Bicep.RpcClient@0.39.26
 #:property JsonSerializerIsReflectionEnabledByDefault=true
 
 using Bicep.RpcClient;
 
 var clientFactory = new BicepClientFactory(new HttpClient());
-using var client = await clientFactory.DownloadAndInitialize(new() { BicepVersion = "0.38.33" }, default);
+using var client = await clientFactory.DownloadAndInitialize(new() { BicepVersion = "0.39.26" }, default);
 
 foreach (var file in Directory.GetFileSystemEntries("/Users/ant/Code/azure-quickstart-templates", "*.bicep", SearchOption.AllDirectories))
 {

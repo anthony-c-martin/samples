@@ -1,27 +1,15 @@
 #!/usr/bin/env dotnet
 
-#:package Azure.Bicep.Core@0.38.33
+#:package Azure.Bicep.Core@0.39.26
 #:property JsonSerializerIsReflectionEnabledByDefault=true
 #:property PublishAot=false
 
-using System.IO.Abstractions;
 using System.Text;
 using Bicep.Core;
-using Bicep.Core.Analyzers.Interfaces;
-using Bicep.Core.Analyzers.Linter;
-using Bicep.Core.AzureApi;
-using Bicep.Core.Configuration;
 using Bicep.Core.Extensions;
-using Bicep.Core.Features;
 using Bicep.Core.Parsing;
-using Bicep.Core.Registry;
-using Bicep.Core.Registry.Catalog.Implementation;
 using Bicep.Core.Semantics;
-using Bicep.Core.Semantics.Namespaces;
-using Bicep.Core.SourceGraph;
 using Bicep.Core.Syntax;
-using Bicep.Core.TypeSystem.Providers;
-using Bicep.Core.Utils;
 using Bicep.IO.Abstraction;
 using Bicep.IO.InMemory;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,7 +29,8 @@ output foo string = foo
 """);
 
 var services = new ServiceCollection()
-    .AddBicepCore(fileExplorer)
+    .AddSingleton<IFileExplorer>(fileExplorer)
+    .AddBicepCore()
     .BuildServiceProvider();
 
 var compiler = services.GetRequiredService<BicepCompiler>();
@@ -152,28 +141,4 @@ public class SyntaxCollectorVisitor : CstVisitor
         depth--;
         parent = prevParent;
     }
-}
-
-public static class ServiceCollectionExtensions
-{
-    public static IServiceCollection AddBicepCore(this IServiceCollection services, IFileExplorer fileExplorer) => services
-        .AddSingleton<INamespaceProvider, NamespaceProvider>()
-        .AddSingleton<IResourceTypeProviderFactory, ResourceTypeProviderFactory>()
-        .AddSingleton<IContainerRegistryClientFactory, ContainerRegistryClientFactory>()
-        .AddSingleton<ITemplateSpecRepositoryFactory, TemplateSpecRepositoryFactory>()
-        .AddSingleton<IArmClientProvider, ArmClientProvider>()
-        .AddSingleton<IModuleDispatcher, ModuleDispatcher>()
-        .AddSingleton<IArtifactRegistryProvider, DefaultArtifactRegistryProvider>()
-        .AddSingleton<ITokenCredentialFactory, TokenCredentialFactory>()
-        .AddSingleton<IEnvironment, Bicep.Core.Utils.Environment>()
-        .AddSingleton<IFileSystem, FileSystem>()
-        .AddSingleton<IFileExplorer>(fileExplorer)
-        .AddSingleton<IAuxiliaryFileCache, AuxiliaryFileCache>()
-        .AddSingleton<IConfigurationManager, ConfigurationManager>()
-        .AddSingleton<IBicepAnalyzer, LinterAnalyzer>()
-        .AddSingleton<IFeatureProviderFactory, FeatureProviderFactory>()
-        .AddSingleton<ILinterRulesProvider, LinterRulesProvider>()
-        .AddSingleton<ISourceFileFactory, SourceFileFactory>()
-        .AddRegistryCatalogServices()
-        .AddSingleton<BicepCompiler>();
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env dotnet
 
-#:package Azure.Bicep.Core@0.38.33
+#:package Azure.Bicep.Core@0.39.26
 #:property JsonSerializerIsReflectionEnabledByDefault=true
 #:property PublishAot=false
 
