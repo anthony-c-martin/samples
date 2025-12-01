@@ -14,11 +14,13 @@ dotnet csharp/arm-expression-evaluator.cs
 * [bicep-print-syntax-tree.cs](csharp/bicep-print-syntax-tree.cs): Demonstrates parsing Bicep files and printing their abstract syntax tree structure for debugging and analysis.
 * [bicep-type-generation/](csharp/bicep-type-generation/): Project that converts JSON schema definitions into Bicep type definitions for custom resource providers.
 * [quickstart-compile.cs](csharp/quickstart-compile.cs): Bulk compilation tool for compiling all Bicep files in the Azure Quickstart Templates repository.
+* [quickstart-markdown.cs](csharp/quickstart-markdown.cs): Generates markdown documentation from Bicep files, including descriptions, deployment graphs, parameters, and outputs with GitHub-compatible code links.
 
 ### Azure Resource Type APIs
 * [get-resource-schema.cs](csharp/get-resource-schema.cs): Shows how to retrieve and convert Azure resource type schemas to JSON Schema format using Bicep type libraries.
 * [type-navigation.cs](csharp/type-navigation.cs): Demonstrates navigation through Azure resource type definitions to explore properties and structure.
 
 ### Other
-* [arm-expression-evaluator.cs](csharp/arm-expression-evaluator.cs): Demonstrates how to evaluate ARM template expressions locally, including creating a custom `reverse()` function.
+* [arm-custom-expression.cs](csharp/arm-custom-expression.cs): Demonstrates how to create and register custom ARM template expression functions, including a custom `reverse()` function implementation.
+* [arm-eval-expression.cs](csharp/arm-eval-expression.cs): Simple example of evaluating ARM template expressions using the built-in expression evaluator.
 * [cli-boilerplate.cs](csharp/cli-boilerplate.cs): Template for creating command-line applications with argument parsing using CommandLineParser library.
