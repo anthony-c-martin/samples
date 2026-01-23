@@ -1,5 +1,12 @@
 A place to put my reusable code samples for sharing with people
 
+## Bicep Samples
+
+Examples using Bicep's local deployment feature (`targetScope = 'local'`):
+* [local-deploy-azure/](bicep/local-deploy-azure/): Demonstrates local deployment targeting Azure resources.
+* [local-deploy-github-oidc/](bicep/local-deploy-github-oidc/): Sets up GitHub OIDC federation with Azure for secure CI/CD authentication.
+* [local-deploy-kubernetes/](bicep/local-deploy-kubernetes/): Deploys applications to Kubernetes using local Bicep deployment.
+
 ## C# Samples
 
 The majority of these samples can be run directly with `dotnet`, as long as you have .NET 10 installed. For example, run the following in the repo root:
@@ -24,3 +31,7 @@ dotnet csharp/arm-expression-evaluator.cs
 * [arm-custom-expression.cs](csharp/arm-custom-expression.cs): Demonstrates how to create and register custom ARM template expression functions, including a custom `reverse()` function implementation.
 * [arm-eval-expression.cs](csharp/arm-eval-expression.cs): Simple example of evaluating ARM template expressions using the built-in expression evaluator.
 * [cli-boilerplate.cs](csharp/cli-boilerplate.cs): Template for creating command-line applications with argument parsing using CommandLineParser library.
+
+## Other Samples
+
+* [armguid/](other/armguid/): Reference implementations of the ARM `guid()` function in C#, Python, and TypeScript for generating deterministic UUIDs.
