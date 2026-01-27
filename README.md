@@ -30,6 +30,7 @@ dotnet csharp/arm-expression-evaluator.cs
 ### Other
 * [arm-custom-expression.cs](csharp/arm-custom-expression.cs): Demonstrates how to create and register custom ARM template expression functions, including a custom `reverse()` function implementation.
 * [arm-eval-expression.cs](csharp/arm-eval-expression.cs): Simple example of evaluating ARM template expressions using the built-in expression evaluator.
+* [arm-mcp-server.cs](csharp/arm-mcp-server.cs): Shows how to connect to Azure's ARM Model Context Protocol (MCP) server using interactive browser authentication to execute Azure Resource Graph queries.
 * [cli-boilerplate.cs](csharp/cli-boilerplate.cs): Template for creating command-line applications with argument parsing using CommandLineParser library.
 
 ## Other Samples
