@@ -1,12 +1,12 @@
 #!/usr/bin/env dotnet
 
-#:package Azure.Bicep.RpcClient@0.39.26
+#:package Azure.Bicep.RpcClient@0.42.1
 #:property JsonSerializerIsReflectionEnabledByDefault=true
 
 using Bicep.RpcClient;
 
-var clientFactory = new BicepClientFactory(new HttpClient());
-using var client = await clientFactory.DownloadAndInitialize(new() { BicepVersion = "0.39.26" }, default);
+IBicepClientFactory clientFactory = new BicepClientFactory();
+using var client = await clientFactory.Initialize(new() { BicepVersion = "0.42.1" });
     
 var version = await client.GetVersion();
 Console.WriteLine($"Bicep version: {version}");
